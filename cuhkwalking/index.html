@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Map with Multiple Points of Interest</title>
+    <link rel="stylesheet" href="javascript/leaflet/leaflet.css" />
+    <style>
+        #map {
+            height: 70vh;
+            width: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <span>
+        <text>map</text>
+    </span>
+    
+
+    <script src="javascript/leaflet/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        var map = L.map('map',{ 
+        minZoom: 16,
+         maxZoom: 18
+        }).setView([0, 0], 0);
+
+        var imageUrl = 'css/image/mapCuhk.jpg'; // Replace with your local image path
+        var imageBounds = [[22.2464, 114.1159], [22.2568, 114.1265]]; // Adjust to your image's coordinates
+
+        // Add the image overlay
+        L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+        // Fit the map to the image bounds
+        map.fitBounds(imageBounds);
+
+        // Define custom icons
+        var CUHKIcon = L.icon({
+            iconUrl: 'css/image/Emblem_of_CU.png',
+            iconSize: [45, 45],
+            iconAnchor: [22, 90],
+            popupAnchor: [-3, -76]
+        });
+
+        var UCIcon = L.icon({
+            iconUrl: 'css/image/Emblem_of_UC.png',
+            iconSize: [45, 45],
+            iconAnchor: [22, 94],
+            popupAnchor: [-3, -76]
+        });
+
+        var NAIcon = L.icon({
+            iconUrl: 'css/image/Emblem_of_NA.png',
+            iconSize: [35, 35],
+            iconAnchor: [22, 94],
+            popupAnchor: [-3, -76]
+        });
+
+        // Add markers with different icons
+       var poi1= L.marker([22.2506, 114.1242], { icon: CUHKIcon }).addTo(map)
+            .bindPopup("I am UGYM");
+
+        var poi2=L.marker([22.2537, 114.1205], { icon: UCIcon }).addTo(map)
+            .bindPopup("I am UC.");
+
+        L.marker([22.2537, 114.1225], { icon: NAIcon }).addTo(map)
+            .bindPopup("I am NA.");
+
+                    // Function to show/hide POIs based on zoom level
+        function updatePOIVisibility() {
+            var currentZoom = map.getZoom();
+            if (currentZoom < 17) {
+                map.removeLayer(poi1);
+                map.removeLayer(poi2);
+            } else {
+                map.addLayer(poi1);
+                map.addLayer(poi2);
+            }
+        }
+
+        // Update POI visibility on zoom end
+        map.on('zoomend', updatePOIVisibility);
+
+        // Initial check
+        updatePOIVisibility();
+
+    </script>
+</body>
+</html>
